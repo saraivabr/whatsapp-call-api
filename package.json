@@ -1,0 +1,24 @@
+{
+  "name": "whatsapp-call-api",
+  "version": "1.0.0",
+  "description": "API para realizar ligações via WhatsApp usando Baileys",
+  "main": "src/index.js",
+  "type": "module",
+  "scripts": {
+    "start": "node src/index.js",
+    "dev": "nodemon src/index.js"
+  },
+  "keywords": ["whatsapp", "baileys", "call", "api", "voip"],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "@whiskeysockets/baileys": "^6.7.9",
+    "express": "^4.18.2",
+    "qrcode-terminal": "^0.12.0",
+    "pino": "^8.19.0",
+    "qrcode": "^1.5.3"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.3"
+  }
+}

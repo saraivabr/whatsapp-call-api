@@ -1,0 +1,13 @@
+version: '3.8'
+
+services:
+  whatsapp-call-api:
+    build: .
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./auth_info_baileys:/app/auth_info_baileys
+    environment:
+      - PORT=3000
+      - SESSION_NAME=whatsapp-call-session
+    restart: unless-stopped
