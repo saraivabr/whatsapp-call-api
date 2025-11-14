@@ -9,8 +9,35 @@
 
 ---
 
+## ⚡ Início Rápido
+
+```bash
+# 1. Clone e instale
+git clone https://github.com/seu-usuario/whatsapp-call-api.git
+cd whatsapp-call-api
+npm install
+
+# 2. Configure
+cp .env.example .env
+
+# 3. Inicie o servidor
+npm start
+
+# 4. Escaneie o QR Code que aparecerá no terminal com seu WhatsApp
+
+# 5. Faça sua primeira chamada!
+curl -X POST http://localhost:3000/api/call \
+  -H "Content-Type: application/json" \
+  -d '{"phoneNumber": "5511999999999", "isVideo": false}'
+```
+
+**Pronto!** 🎉 Sua API está rodando em `http://localhost:3000`
+
+---
+
 ## 📋 Índice
 
+- [Início Rápido](#-início-rápido)
 - [Sobre o Projeto](#-sobre-o-projeto)
 - [Características](#-características)
 - [Pré-requisitos](#-pré-requisitos)
@@ -19,12 +46,15 @@
 - [Uso](#-uso)
 - [Documentação da API](#-documentação-da-api)
 - [Docker](#-docker)
-- [Exemplos](#-exemplos)
 - [Estrutura do Projeto](#-estrutura-do-projeto)
 - [Tecnologias](#-tecnologias)
-- [Troubleshooting](#-troubleshooting)
 - [Contribuindo](#-contribuindo)
 - [Licença](#-licença)
+
+### 📚 Documentação Adicional
+
+- **[💡 Exemplos de Uso](docs/EXAMPLES.md)** - Exemplos práticos e casos de uso
+- **[🐛 Solução de Problemas](docs/TROUBLESHOOTING.md)** - Guia completo de troubleshooting
 
 ---
 
@@ -422,138 +452,25 @@ volumes:
 
 ## 💡 Exemplos
 
-### Exemplo 1: Fazer uma Chamada de Voz
+Para exemplos práticos e detalhados de uso da API, consulte:
 
-**Node.js com Axios**
+### **[📖 Guia Completo de Exemplos](docs/EXAMPLES.md)**
 
-```javascript
-import axios from 'axios';
+Inclui:
+- 📞 Fazer chamadas de voz e vídeo
+- 🔍 Verificar status da conexão
+- 🔐 Obter QR Code para autenticação
+- 🧪 Scripts de teste
+- 🎯 Casos de uso avançados
 
-const API_URL = 'http://localhost:3000/api';
-
-async function makeVoiceCall() {
-  try {
-    const response = await axios.post(`${API_URL}/call`, {
-      phoneNumber: '5511999999999',
-      isVideo: false
-    });
-
-    console.log('Chamada iniciada:', response.data);
-    // {
-    //   success: true,
-    //   callId: 'call_1731582600000_abc123',
-    //   to: '5511999999999@s.whatsapp.net',
-    //   type: 'audio',
-    //   timestamp: '2025-11-14T10:30:00.000Z'
-    // }
-  } catch (error) {
-    console.error('Erro:', error.response?.data || error.message);
-  }
-}
-
-makeVoiceCall();
-```
-
-### Exemplo 2: Fazer uma Videochamada
-
-```javascript
-async function makeVideoCall() {
-  try {
-    const response = await axios.post(`${API_URL}/call`, {
-      phoneNumber: '5511999999999',
-      isVideo: true  // ← Videochamada
-    });
-
-    console.log('Videochamada iniciada:', response.data);
-  } catch (error) {
-    console.error('Erro:', error.response?.data || error.message);
-  }
-}
-```
-
-### Exemplo 3: Verificar Status Antes de Ligar
-
-```javascript
-async function callWithStatusCheck(phoneNumber) {
-  try {
-    // 1. Verificar se está conectado
-    const statusResponse = await axios.get(`${API_URL}/status`);
-
-    if (!statusResponse.data.connected) {
-      throw new Error('WhatsApp não está conectado');
-    }
-
-    console.log('Status:', statusResponse.data.state);
-
-    // 2. Fazer a chamada
-    const callResponse = await axios.post(`${API_URL}/call`, {
-      phoneNumber,
-      isVideo: false
-    });
-
-    console.log('Chamada iniciada:', callResponse.data.callId);
-
-  } catch (error) {
-    console.error('Erro:', error.message);
-  }
-}
-
-callWithStatusCheck('5511999999999');
-```
-
-### Exemplo 4: Obter QR Code para Autenticação
-
-```javascript
-async function getQRCode() {
-  try {
-    const response = await axios.get(`${API_URL}/qr`);
-
-    // QR Code como string
-    console.log('QR Code:', response.data.qrCode);
-
-    // QR Code como imagem base64 (use em <img src="...">)
-    console.log('QR Image:', response.data.qrImage);
-
-    // Exemplo de uso em HTML
-    const html = `<img src="${response.data.qrImage}" alt="QR Code WhatsApp">`;
-
-  } catch (error) {
-    if (error.response?.status === 404) {
-      console.log('WhatsApp já está conectado!');
-    } else {
-      console.error('Erro:', error.response?.data || error.message);
-    }
-  }
-}
-```
-
-### Exemplo 5: Script de Teste Bash
+**Exemplo rápido:**
 
 ```bash
-#!/bin/bash
-
-API_URL="http://localhost:3000/api"
-
-# Verificar status
-echo "🔍 Verificando status..."
-curl -s "$API_URL/status" | jq
-
-# Fazer chamada
-echo -e "\n📞 Fazendo chamada..."
-curl -s -X POST "$API_URL/call" \
+# Fazer uma chamada de voz
+curl -X POST http://localhost:3000/api/call \
   -H "Content-Type: application/json" \
-  -d '{
-    "phoneNumber": "5511999999999",
-    "isVideo": false
-  }' | jq
+  -d '{"phoneNumber": "5511999999999", "isVideo": false}'
 ```
-
-### Mais Exemplos
-
-Veja a pasta `examples/` para exemplos mais avançados:
-- `examples/call-examples.js` - Exemplos básicos de uso
-- `examples/advanced-call.js` - Cenários avançados
-- `examples/webhook-handler.js` - Integração com webhooks
 
 ---
 
@@ -625,123 +542,22 @@ whatsapp-call-api/
 
 ## 🐛 Troubleshooting
 
-### Problema: QR Code não aparece
+Encontrou algum problema? Consulte nosso guia completo de solução de problemas:
 
-**Sintomas**: Servidor inicia mas não exibe QR Code
+### **[🔧 Guia de Solução de Problemas](docs/TROUBLESHOOTING.md)**
 
-**Soluções**:
-1. Verifique se já está autenticado:
-   ```bash
-   curl http://localhost:3000/api/status
-   ```
-2. Se `connected: true`, delete a sessão e reinicie:
-   ```bash
-   rm -rf auth_info_baileys/
-   npm start
-   ```
+Soluções para:
+- ❌ QR Code não aparece
+- ❌ Erro "WhatsApp não está conectado"
+- ❌ Porta 3000 já em uso
+- ❌ Problemas com Docker
+- ❌ Chamadas que não completam
+- 📝 Logs e debugging detalhado
 
----
-
-### Problema: Erro "WhatsApp não está conectado"
-
-**Sintomas**: API retorna erro ao tentar fazer chamada
-
-**Soluções**:
-1. Verifique o status:
-   ```bash
-   curl http://localhost:3000/api/status
-   ```
-2. Se `state: "qr"`, escaneie o QR Code:
-   ```bash
-   curl http://localhost:3000/api/qr
-   ```
-3. Aguarde o estado mudar para `connected`
-
----
-
-### Problema: Erro "Cannot find module"
-
-**Sintomas**:
-```
-Error: Cannot find module 'axios'
-```
-
-**Solução**:
+**Dica rápida:** Na maioria dos casos, limpar a sessão resolve:
 ```bash
-npm install
-```
-
----
-
-### Problema: Porta 3000 já em uso
-
-**Sintomas**:
-```
-Error: listen EADDRINUSE: address already in use :::3000
-```
-
-**Soluções**:
-1. **Altere a porta** no `.env`:
-   ```env
-   PORT=3001
-   ```
-2. **Ou mate o processo** usando a porta:
-   ```bash
-   # Linux/Mac
-   lsof -ti:3000 | xargs kill -9
-
-   # Windows
-   netstat -ano | findstr :3000
-   taskkill /PID <PID> /F
-   ```
-
----
-
-### Problema: Docker não consegue acessar auth_info_baileys
-
-**Sintomas**: Container reinicia constantemente
-
-**Solução**:
-1. Certifique-se de que o diretório existe:
-   ```bash
-   mkdir -p auth_info_baileys
-   ```
-2. Verifique permissões:
-   ```bash
-   chmod 755 auth_info_baileys
-   ```
-
----
-
-### Problema: Chamada não completa
-
-**Sintomas**: API retorna sucesso mas chamada não toca no WhatsApp
-
-**Possíveis causas**:
-- ⚠️ Número de telefone inválido ou bloqueado
-- ⚠️ WhatsApp do destinatário sem internet
-- ⚠️ Conta WhatsApp banida temporariamente (uso excessivo de API)
-
-**Recomendação**: Aguarde alguns minutos entre chamadas e evite spam.
-
----
-
-### Logs e Debugging
-
-**Ver logs do servidor**:
-```bash
-# Modo desenvolvimento (já ativa logs)
-npm run dev
-
-# Docker
-docker-compose logs -f
-```
-
-**Habilitar logs detalhados do Baileys**:
-
-Edite `src/config/baileys.js`:
-```javascript
-const logger = pino({ level: 'info' }); // Alterar de 'silent' para 'info'
+rm -rf auth_info_baileys/
+npm start
 ```
 
 ---
